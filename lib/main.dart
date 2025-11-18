@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tmdbmaze/src/app/export.dart';
+import 'package:tmdbmaze/src/feature/movies/export.dart';
 
 import 'app.dart';
 
@@ -16,5 +18,14 @@ void main() async {
   // connectivityBloc.checkConnectivity();
 
   // runApp(MyApp(connectivityBloc: connectivityBloc));
-  runApp(MainApp());
+
+  final isar = await IsarService.getInstance();
+  final httpClient = HttpClient.instance;
+
+  final remoteDataSource = ShowsRemoteDataSourceImpl(client: httpClient);
+  final localDataSource = ShowsLocalDataSourceImpl(isar: isar);
+
+  final repository = ShowsRepositoryImpl(remoteDataSource: remoteDataSource, localDataSource: localDataSource);
+
+  runApp(MainApp(repository: repository));
 }
