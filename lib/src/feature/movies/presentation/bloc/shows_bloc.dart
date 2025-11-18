@@ -7,7 +7,7 @@ part 'shows_event.dart';
 part 'shows_state.dart';
 
 class ShowsBloc extends Bloc<ShowsEvent, ShowsState> {
-  ShowsBloc({required this.repository}) : super(ShowsInitial()) {
+  ShowsBloc({required this.repository}) : super(ShowsLoading()) {
     on<LoadShows>(_onLoadShows);
     on<LoadLocalShows>(_onLoadLocalPosts);
   }

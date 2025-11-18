@@ -4,4 +4,5 @@ export 'di/injector.dart';
 export 'network/http_client.dart';
 export 'routing/router.dart';
 export 'routing/routes.dart';
+export 'utils/genre_color.dart';
 export 'utils/result.dart';
