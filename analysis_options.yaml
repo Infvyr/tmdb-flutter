@@ -36,6 +36,7 @@ linter:
     - prefer_single_quotes
     - provide_deprecation_message
     - recursive_getters
+    - require_trailing_commas
     - slash_for_doc_comments
     - sort_child_properties_last
     - sort_constructors_first

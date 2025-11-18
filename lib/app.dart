@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tmdbmaze/src/feature/movies/export.dart';
+import 'package:tmdbmaze/src/app/export.dart';
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key, required this.repository});
-
-  final ShowsRepository repository;
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    home: BlocProvider(
-      create: (context) => ShowsBloc(repository: repository)..add(const LoadShows()),
-      child: const ShowsScreen(),
+    debugShowCheckedModeBanner: false,
+    title: 'TmdbMaze',
+    theme: ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 4, 104, 41)),
     ),
+    darkTheme: ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color.fromARGB(255, 2, 66, 14),
+        brightness: Brightness.dark,
+      ),
+    ),
+    initialRoute: AppRoutes.splash,
+    onGenerateRoute: Routes.generateRoute,
   );
 }
