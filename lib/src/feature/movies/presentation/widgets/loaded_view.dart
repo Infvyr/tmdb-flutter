@@ -19,7 +19,7 @@ class LoadedView extends StatelessWidget {
         })(),
       Expanded(
         child: shows.isEmpty
-            ? const Center(child: Text('No shows available'))
+            ? const Center(child: Text('No shows found. Try a different search term.'))
             : ShowsView(shows),
       ),
     ],

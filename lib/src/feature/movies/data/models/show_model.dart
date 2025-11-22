@@ -12,6 +12,7 @@ class ShowModel {
     required this.language,
     required this.genres,
     required this.status,
+    this.type,
     this.runtime,
     this.averageRuntime,
     this.premiered,
@@ -30,6 +31,7 @@ class ShowModel {
     language: show.language,
     genres: show.genres,
     status: show.status,
+    type: show.type,
     runtime: show.runtime,
     averageRuntime: show.averageRuntime,
     premiered: show.premiered,
@@ -48,6 +50,7 @@ class ShowModel {
       language = '',
       genres = [],
       status = '',
+      type = '',
       runtime = 0,
       averageRuntime = 0,
       premiered = '',
@@ -58,23 +61,41 @@ class ShowModel {
       image = ShowImage.empty(),
       summary = '';
 
-  factory ShowModel.fromJson(Map<String, dynamic> json) => ShowModel(
-    showId: json['id'] as int,
-    url: json['url'] as String,
-    name: json['name'] as String,
-    language: json['language'] as String,
-    genres: List<String>.from(json['genres'] as List<dynamic>),
-    status: json['status'] as String,
-    runtime: json['runtime'] as int?,
-    averageRuntime: json['averageRuntime'] as int?,
-    premiered: json['premiered'] as String?,
-    ended: json['ended'] as String?,
-    rating: json['rating'] != null ? ShowRating.fromJson(json['rating'] as Map<String, dynamic>) : null,
-    network: json['network'] != null ? ShowNetwork.fromJson(json['network'] as Map<String, dynamic>) : null,
-    externals: json['externals'] != null ? ShowExternals.fromJson(json['externals'] as Map<String, dynamic>) : null,
-    image: json['image'] != null ? ShowImage.fromJson(json['image'] as Map<String, dynamic>) : null,
-    summary: json['summary'] as String?,
-  );
+  factory ShowModel.fromJson(Map<String, dynamic> json) {
+    final genresList = json['genres'] as List<dynamic>?;
+    final genres = genresList != null
+        ? List<String>.from(
+            genresList.whereType<String>(),
+          )
+        : <String>[];
+
+    return ShowModel(
+      showId: json['id'] as int,
+      url: json['url'] as String,
+      name: json['name'] as String,
+      language: json['language'] as String? ?? 'Unknown',
+      genres: genres,
+      status: json['status'] as String? ?? 'Unknown',
+      type: json['type'] as String?,
+      runtime: json['runtime'] as int?,
+      averageRuntime: json['averageRuntime'] as int?,
+      premiered: json['premiered'] as String?,
+      ended: json['ended'] as String?,
+      rating: json['rating'] != null
+          ? ShowRating.fromJson(json['rating'] as Map<String, dynamic>)
+          : null,
+      network: json['network'] != null
+          ? ShowNetwork.fromJson(json['network'] as Map<String, dynamic>)
+          : null,
+      externals: json['externals'] != null
+          ? ShowExternals.fromJson(json['externals'] as Map<String, dynamic>)
+          : null,
+      image: json['image'] != null
+          ? ShowImage.fromJson(json['image'] as Map<String, dynamic>)
+          : null,
+      summary: json['summary'] as String?,
+    );
+  }
 
   Id id = Isar.autoIncrement;
 
@@ -84,6 +105,7 @@ class ShowModel {
   late String language;
   late List<String> genres;
   late String status;
+  late String? type;
   late int? runtime;
   late int? averageRuntime;
   late String? premiered;
@@ -101,6 +123,7 @@ class ShowModel {
     'language': language,
     'genres': genres,
     'status': status,
+    'type': type,
     'runtime': runtime,
     'averageRuntime': averageRuntime,
     'premiered': premiered,
@@ -119,6 +142,7 @@ class ShowModel {
     language: language,
     genres: genres,
     status: status,
+    type: type,
     runtime: runtime,
     averageRuntime: averageRuntime,
     premiered: premiered,

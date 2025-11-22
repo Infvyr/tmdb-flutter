@@ -8,6 +8,7 @@ class Show {
     required this.language,
     required this.genres,
     required this.status,
+    this.type,
     this.runtime,
     this.averageRuntime,
     this.premiered,
@@ -25,6 +26,7 @@ class Show {
   final String language;
   final List<String> genres;
   final String status;
+  final String? type;
   final int? runtime;
   final int? averageRuntime;
   final String? premiered;

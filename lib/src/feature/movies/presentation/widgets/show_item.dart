@@ -8,17 +8,17 @@ class ShowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: .start,
-    children: [
-      ShowItemImage(show.image?.medium),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        child: Column(
-          crossAxisAlignment: .start,
-          spacing: 5,
-          children: [ShowItemName(show.name), ShowItemGenres(show.genres)],
-        ),
-      ),
-    ],
-  );
+        crossAxisAlignment: .start,
+        children: [
+          ShowItemImage(show.image?.medium, status: show.status),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Column(
+              crossAxisAlignment: .start,
+              spacing: 5,
+              children: [ShowItemName(show.name), ShowItemGenres(show.genres)],
+            ),
+          ),
+        ],
+      );
 }

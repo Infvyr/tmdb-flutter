@@ -17,3 +17,36 @@ class LoadShows extends ShowsEvent {
 }
 
 class LoadLocalShows extends ShowsEvent {}
+
+class SearchShowsEvent extends ShowsEvent {
+  const SearchShowsEvent(
+    this.query, {
+    this.filter,
+    this.pagination,
+  });
+
+  final SearchQuery query;
+  final ShowFilter? filter;
+  final PaginationParams? pagination;
+
+  @override
+  List<Object?> get props => [query, filter, pagination];
+}
+
+class ApplyFilterEvent extends ShowsEvent {
+  const ApplyFilterEvent(this.filter);
+
+  final ShowFilter filter;
+
+  @override
+  List<Object?> get props => [filter];
+}
+
+class ChangePaginationEvent extends ShowsEvent {
+  const ChangePaginationEvent(this.pagination);
+
+  final PaginationParams pagination;
+
+  @override
+  List<Object?> get props => [pagination];
+}
