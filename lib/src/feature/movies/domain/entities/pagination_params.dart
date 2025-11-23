@@ -11,13 +11,11 @@ class PaginationParams extends Equatable {
   bool get hasPreviousPage => currentPage > 1;
   bool get hasNextPage => currentPage < totalPages;
 
-  PaginationParams copyWith({int? currentPage, int? pageSize, int? totalItems}) {
-    return PaginationParams(
-      currentPage: currentPage ?? this.currentPage,
-      pageSize: pageSize ?? this.pageSize,
-      totalItems: totalItems ?? this.totalItems,
-    );
-  }
+  PaginationParams copyWith({int? currentPage, int? pageSize, int? totalItems}) => PaginationParams(
+    currentPage: currentPage ?? this.currentPage,
+    pageSize: pageSize ?? this.pageSize,
+    totalItems: totalItems ?? this.totalItems,
+  );
 
   PaginationParams nextPage() {
     if (!hasNextPage) return this;

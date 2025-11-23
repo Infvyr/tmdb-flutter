@@ -18,6 +18,8 @@ class Show {
     this.externals,
     this.image,
     this.summary,
+    this.links,
+    this.schedule,
   });
 
   final int showId;
@@ -36,8 +38,10 @@ class Show {
   final ShowExternals? externals;
   final ShowImage? image;
   final String? summary;
+  final ShowLinks? links;
+  final ShowSchedule? schedule;
 
   @override
   String toString() =>
-      'Show(showId: $showId, url: $url, name: $name, language: $language, genres: $genres, status: $status, runtime: $runtime, averageRuntime: $averageRuntime, premiered: $premiered, ended: $ended, rating: $rating, network: $network, externals: $externals, image: $image, summary: ${summary?.substring(0, summary!.length.clamp(0, 50))})';
+      'Show(showId: $showId, url: $url, name: $name, language: $language, genres: $genres, status: $status, runtime: $runtime, averageRuntime: $averageRuntime, premiered: $premiered, ended: $ended, rating: $rating, network: $network, externals: $externals, image: $image, summary: ${summary?.substring(0, summary!.length.clamp(0, 50))}, links: $links, schedule: $schedule)';
 }

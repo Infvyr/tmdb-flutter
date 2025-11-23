@@ -37,6 +37,8 @@ class _MovieScreenState extends State<MovieScreen> {
             children: [
               ShowDetailRating(widget.show),
               ShowDetailSchedule(widget.show),
+              ShowDetailAirtime(widget.show),
+              ShowDetailLinks(widget.show),
               ShowDetailSummary(widget.show),
               ShowDetailGrid(widget.show),
               const SizedBox(height: 32),

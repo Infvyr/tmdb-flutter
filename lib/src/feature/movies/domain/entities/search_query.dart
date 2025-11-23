@@ -20,14 +20,12 @@ class SearchQuery extends Equatable {
     bool? searchByName,
     bool? searchByGenre,
     bool? searchByNetwork,
-  }) {
-    return SearchQuery(
-      query: query ?? this.query,
-      searchByName: searchByName ?? this.searchByName,
-      searchByGenre: searchByGenre ?? this.searchByGenre,
-      searchByNetwork: searchByNetwork ?? this.searchByNetwork,
-    );
-  }
+  }) => SearchQuery(
+    query: query ?? this.query,
+    searchByName: searchByName ?? this.searchByName,
+    searchByGenre: searchByGenre ?? this.searchByGenre,
+    searchByNetwork: searchByNetwork ?? this.searchByNetwork,
+  );
 
   SearchQuery clear() => const SearchQuery();
 

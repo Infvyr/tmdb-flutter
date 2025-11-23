@@ -31,33 +31,31 @@ class _GenreDialogContentState extends State<_GenreDialogContent> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Select Genres'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: widget.sortedGenres.map((genre) {
-            final isSelected = _selectedGenres.contains(genre);
-            return CheckboxListTile(
-              title: Text(genre),
-              value: isSelected,
-              onChanged: (_) => _toggleGenre(genre),
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-            );
-          }).toList(),
-        ),
+  Widget build(BuildContext context) => AlertDialog(
+    title: const Text('Select Genres'),
+    content: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: .min,
+        children: widget.sortedGenres.map((genre) {
+          final isSelected = _selectedGenres.contains(genre);
+
+          return CheckboxListTile(
+            title: Padding(padding: const EdgeInsets.only(left: 8), child: Text(genre)),
+            value: isSelected,
+            onChanged: (_) => _toggleGenre(genre),
+            dense: true,
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            contentPadding: EdgeInsets.zero,
+          );
+        }).toList(),
       ),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-        TextButton(
-          onPressed: () => Navigator.pop(context, _selectedGenres),
-          child: const Text('OK'),
-        ),
-      ],
-    );
-  }
+    ),
+    actions: [
+      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+      TextButton(onPressed: () => Navigator.pop(context, _selectedGenres), child: const Text('OK')),
+    ],
+  );
 }
 
 class FilterGenreDialog extends StatelessWidget {
@@ -99,7 +97,7 @@ class FilterGenreDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (availableGenres.isEmpty) {
       return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Text('Genre', style: TextStyle(fontWeight: FontWeight.w600)),
           SizedBox(height: FilterConstants.spacingM),
@@ -109,14 +107,14 @@ class FilterGenreDialog extends StatelessWidget {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         const Text('Genre', style: TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: FilterConstants.spacingM),
         OutlinedButton(
           onPressed: () => _showGenreDialog(context),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Flexible(child: Text(_getDisplayText(), overflow: TextOverflow.ellipsis)),
               const SizedBox(width: FilterConstants.spacingS),

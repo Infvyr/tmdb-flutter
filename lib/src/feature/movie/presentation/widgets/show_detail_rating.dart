@@ -14,12 +14,12 @@ class ShowDetailRating extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 8),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: .spaceEvenly,
           children: [
-            if (show.rating?.average != null) ...[
+            if (show.rating != null && show.rating!.average > 0) ...[
               _RatingItem(
                 label: 'Rating',
-                value: '${show.rating!.average!.toStringAsFixed(1)}/10',
+                value: '${show.rating!.average.toStringAsFixed(1)}/10',
                 icon: Icons.star,
               ),
               Ink(width: 1, height: 48, color: Colors.grey[700]),
@@ -59,7 +59,9 @@ class _RatingItem extends StatelessWidget {
       const SizedBox(height: 4),
       Text(
         value,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600),
+        style: Theme.of(
+          context,
+        ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600),
       ),
     ],
   );

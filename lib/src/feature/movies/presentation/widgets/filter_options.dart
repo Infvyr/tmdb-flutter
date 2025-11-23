@@ -92,10 +92,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     onFilterChanged: _updateFilter,
                     availableStatuses: widget.availableStatuses,
                   ),
-                  FilterRatingSectionOptimized(
-                    initialFilter: _filter,
-                    onFilterChanged: _updateFilter,
-                  ),
+                  FilterRatingRange(initialFilter: _filter, onFilterChanged: _updateFilter),
                   FilterDateRangeSection(filter: _filter, onFilterChanged: _updateFilter),
                   FilterCountryDialog(
                     filter: _filter,

@@ -40,11 +40,14 @@ class _CountryDialogContentState extends State<_CountryDialogContent> {
           final code = entry.key;
           final name = entry.value;
           final isSelected = _selectedCountries.contains(code);
+
           return CheckboxListTile(
-            title: Text(name),
+            title: Padding(padding: const EdgeInsets.only(left: 8), child: Text(name)),
             value: isSelected,
             onChanged: (_) => _toggleCountry(code),
             dense: true,
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             contentPadding: EdgeInsets.zero,
           );
         }).toList(),

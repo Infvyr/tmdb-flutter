@@ -22,6 +22,8 @@ class ShowModel {
     this.externals,
     this.image,
     this.summary,
+    this.links,
+    this.schedule,
   });
 
   factory ShowModel.fromEntity(Show show) => ShowModel(
@@ -41,6 +43,8 @@ class ShowModel {
     externals: show.externals,
     image: show.image,
     summary: show.summary,
+    links: show.links,
+    schedule: show.schedule,
   );
 
   ShowModel.empty()
@@ -59,7 +63,9 @@ class ShowModel {
       network = ShowNetwork.empty(),
       externals = ShowExternals.empty(),
       image = ShowImage.empty(),
-      summary = '';
+      summary = '',
+      links = ShowLinks.empty(),
+      schedule = ShowSchedule.empty();
 
   factory ShowModel.fromJson(Map<String, dynamic> json) {
     final genresList = json['genres'] as List<dynamic>?;
@@ -92,6 +98,12 @@ class ShowModel {
           ? ShowImage.fromJson(json['image'] as Map<String, dynamic>)
           : null,
       summary: json['summary'] as String?,
+      links: json['_links'] != null
+          ? ShowLinks.fromJson(json['_links'] as Map<String, dynamic>)
+          : null,
+      schedule: json['schedule'] != null
+          ? ShowSchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -113,6 +125,8 @@ class ShowModel {
   late ShowExternals? externals;
   late ShowImage? image;
   late String? summary;
+  late ShowLinks? links;
+  late ShowSchedule? schedule;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'id': showId,
@@ -131,6 +145,8 @@ class ShowModel {
     'externals': externals?.toJson(),
     'image': image?.toJson(),
     'summary': summary,
+    '_links': links?.toJson(),
+    'schedule': schedule?.toJson(),
   };
 
   Show toEntity() => Show(
@@ -150,16 +166,18 @@ class ShowModel {
     externals: externals,
     image: image,
     summary: summary,
+    links: links,
+    schedule: schedule,
   );
 
   @override
   String toString() =>
-      'ShowModel(id: $id, showId: $showId, url: $url, name: $name, language: $language, genres: $genres, status: $status, runtime: $runtime, averageRuntime: $averageRuntime, premiered: $premiered, ended: $ended, rating: $rating, network: $network, externals: $externals, image: $image, summary: $summary)';
+      'ShowModel(id: $id, showId: $showId, url: $url, name: $name, language: $language, genres: $genres, status: $status, runtime: $runtime, averageRuntime: $averageRuntime, premiered: $premiered, ended: $ended, rating: $rating, network: $network, externals: $externals, image: $image, summary: $summary, links: $links, schedule: $schedule)';
 }
 
 @embedded
 class ShowRating {
-  ShowRating({this.average});
+  ShowRating({this.average = 0.0});
 
   ShowRating.empty() : average = 0.0;
 
@@ -173,7 +191,7 @@ class ShowRating {
       },
     );
   }
-  double? average;
+  late double average;
 
   Map<String, dynamic> toJson() => {'average': average};
 }
@@ -246,4 +264,48 @@ class ShowImage {
   String? original;
 
   Map<String, dynamic> toJson() => {'medium': medium, 'original': original};
+}
+
+@embedded
+class ShowLinks {
+  ShowLinks({this.selfHref, this.previousEpisodeHref, this.previousEpisodeName});
+
+  ShowLinks.empty() : selfHref = '', previousEpisodeHref = '', previousEpisodeName = '';
+
+  factory ShowLinks.fromJson(Map<String, dynamic> json) {
+    final self = json['self'] as Map<String, dynamic>?;
+    final previousEpisode = json['previousepisode'] as Map<String, dynamic>?;
+    return ShowLinks(
+      selfHref: self?['href'] as String? ?? '',
+      previousEpisodeHref: previousEpisode?['href'] as String?,
+      previousEpisodeName: previousEpisode?['name'] as String?,
+    );
+  }
+
+  String? selfHref;
+  String? previousEpisodeHref;
+  String? previousEpisodeName;
+
+  Map<String, dynamic> toJson() => {
+    'self': {'href': selfHref},
+    'previousepisode': {'href': previousEpisodeHref, 'name': previousEpisodeName},
+  };
+}
+
+@embedded
+class ShowSchedule {
+  ShowSchedule({this.time, this.days});
+
+  ShowSchedule.empty() : time = '', days = [];
+
+  factory ShowSchedule.fromJson(Map<String, dynamic> json) {
+    final daysList = json['days'] as List<dynamic>?;
+    final days = daysList != null ? List<String>.from(daysList.whereType<String>()) : <String>[];
+    return ShowSchedule(time: json['time'] as String? ?? '', days: days);
+  }
+
+  String? time;
+  List<String>? days;
+
+  Map<String, dynamic> toJson() => {'time': time, 'days': days};
 }

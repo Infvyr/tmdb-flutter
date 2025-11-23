@@ -47,7 +47,7 @@ class FilterOptionsRepositoryImpl implements FilterOptionsRepository {
     final sortedGenres = genres.toList()..sort();
 
     return FilterOptions(
-      types: [],
+      types: const [],
       statuses: sortedStatuses,
       genres: sortedGenres,
       countries: countries,

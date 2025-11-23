@@ -28,21 +28,33 @@ const ShowModelSchema = CollectionSchema(
     r'genres': PropertySchema(id: 3, name: r'genres', type: IsarType.stringList),
     r'image': PropertySchema(id: 4, name: r'image', type: IsarType.object, target: r'ShowImage'),
     r'language': PropertySchema(id: 5, name: r'language', type: IsarType.string),
-    r'name': PropertySchema(id: 6, name: r'name', type: IsarType.string),
+    r'links': PropertySchema(id: 6, name: r'links', type: IsarType.object, target: r'ShowLinks'),
+    r'name': PropertySchema(id: 7, name: r'name', type: IsarType.string),
     r'network': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'network',
       type: IsarType.object,
       target: r'ShowNetwork',
     ),
-    r'premiered': PropertySchema(id: 8, name: r'premiered', type: IsarType.string),
-    r'rating': PropertySchema(id: 9, name: r'rating', type: IsarType.object, target: r'ShowRating'),
-    r'runtime': PropertySchema(id: 10, name: r'runtime', type: IsarType.long),
-    r'showId': PropertySchema(id: 11, name: r'showId', type: IsarType.long),
-    r'status': PropertySchema(id: 12, name: r'status', type: IsarType.string),
-    r'summary': PropertySchema(id: 13, name: r'summary', type: IsarType.string),
-    r'type': PropertySchema(id: 14, name: r'type', type: IsarType.string),
-    r'url': PropertySchema(id: 15, name: r'url', type: IsarType.string),
+    r'premiered': PropertySchema(id: 9, name: r'premiered', type: IsarType.string),
+    r'rating': PropertySchema(
+      id: 10,
+      name: r'rating',
+      type: IsarType.object,
+      target: r'ShowRating',
+    ),
+    r'runtime': PropertySchema(id: 11, name: r'runtime', type: IsarType.long),
+    r'schedule': PropertySchema(
+      id: 12,
+      name: r'schedule',
+      type: IsarType.object,
+      target: r'ShowSchedule',
+    ),
+    r'showId': PropertySchema(id: 13, name: r'showId', type: IsarType.long),
+    r'status': PropertySchema(id: 14, name: r'status', type: IsarType.string),
+    r'summary': PropertySchema(id: 15, name: r'summary', type: IsarType.string),
+    r'type': PropertySchema(id: 16, name: r'type', type: IsarType.string),
+    r'url': PropertySchema(id: 17, name: r'url', type: IsarType.string),
   },
   estimateSize: _showModelEstimateSize,
   serialize: _showModelSerialize,
@@ -57,6 +69,8 @@ const ShowModelSchema = CollectionSchema(
     r'Country': CountrySchema,
     r'ShowExternals': ShowExternalsSchema,
     r'ShowImage': ShowImageSchema,
+    r'ShowLinks': ShowLinksSchema,
+    r'ShowSchedule': ShowScheduleSchema,
   },
   getId: _showModelGetId,
   getLinks: _showModelGetLinks,
@@ -93,6 +107,12 @@ int _showModelEstimateSize(ShowModel object, List<int> offsets, Map<Type, List<i
     }
   }
   bytesCount += 3 + object.language.length * 3;
+  {
+    final value = object.links;
+    if (value != null) {
+      bytesCount += 3 + ShowLinksSchema.estimateSize(value, allOffsets[ShowLinks]!, allOffsets);
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   {
     final value = object.network;
@@ -110,6 +130,13 @@ int _showModelEstimateSize(ShowModel object, List<int> offsets, Map<Type, List<i
     final value = object.rating;
     if (value != null) {
       bytesCount += 3 + ShowRatingSchema.estimateSize(value, allOffsets[ShowRating]!, allOffsets);
+    }
+  }
+  {
+    final value = object.schedule;
+    if (value != null) {
+      bytesCount +=
+          3 + ShowScheduleSchema.estimateSize(value, allOffsets[ShowSchedule]!, allOffsets);
     }
   }
   bytesCount += 3 + object.status.length * 3;
@@ -146,21 +173,33 @@ void _showModelSerialize(
   writer.writeStringList(offsets[3], object.genres);
   writer.writeObject<ShowImage>(offsets[4], allOffsets, ShowImageSchema.serialize, object.image);
   writer.writeString(offsets[5], object.language);
-  writer.writeString(offsets[6], object.name);
+  writer.writeObject<ShowLinks>(offsets[6], allOffsets, ShowLinksSchema.serialize, object.links);
+  writer.writeString(offsets[7], object.name);
   writer.writeObject<ShowNetwork>(
-    offsets[7],
+    offsets[8],
     allOffsets,
     ShowNetworkSchema.serialize,
     object.network,
   );
-  writer.writeString(offsets[8], object.premiered);
-  writer.writeObject<ShowRating>(offsets[9], allOffsets, ShowRatingSchema.serialize, object.rating);
-  writer.writeLong(offsets[10], object.runtime);
-  writer.writeLong(offsets[11], object.showId);
-  writer.writeString(offsets[12], object.status);
-  writer.writeString(offsets[13], object.summary);
-  writer.writeString(offsets[14], object.type);
-  writer.writeString(offsets[15], object.url);
+  writer.writeString(offsets[9], object.premiered);
+  writer.writeObject<ShowRating>(
+    offsets[10],
+    allOffsets,
+    ShowRatingSchema.serialize,
+    object.rating,
+  );
+  writer.writeLong(offsets[11], object.runtime);
+  writer.writeObject<ShowSchedule>(
+    offsets[12],
+    allOffsets,
+    ShowScheduleSchema.serialize,
+    object.schedule,
+  );
+  writer.writeLong(offsets[13], object.showId);
+  writer.writeString(offsets[14], object.status);
+  writer.writeString(offsets[15], object.summary);
+  writer.writeString(offsets[16], object.type);
+  writer.writeString(offsets[17], object.url);
 }
 
 ShowModel _showModelDeserialize(
@@ -180,24 +219,30 @@ ShowModel _showModelDeserialize(
     genres: reader.readStringList(offsets[3]) ?? [],
     image: reader.readObjectOrNull<ShowImage>(offsets[4], ShowImageSchema.deserialize, allOffsets),
     language: reader.readString(offsets[5]),
-    name: reader.readString(offsets[6]),
+    links: reader.readObjectOrNull<ShowLinks>(offsets[6], ShowLinksSchema.deserialize, allOffsets),
+    name: reader.readString(offsets[7]),
     network: reader.readObjectOrNull<ShowNetwork>(
-      offsets[7],
+      offsets[8],
       ShowNetworkSchema.deserialize,
       allOffsets,
     ),
-    premiered: reader.readStringOrNull(offsets[8]),
+    premiered: reader.readStringOrNull(offsets[9]),
     rating: reader.readObjectOrNull<ShowRating>(
-      offsets[9],
+      offsets[10],
       ShowRatingSchema.deserialize,
       allOffsets,
     ),
-    runtime: reader.readLongOrNull(offsets[10]),
-    showId: reader.readLong(offsets[11]),
-    status: reader.readString(offsets[12]),
-    summary: reader.readStringOrNull(offsets[13]),
-    type: reader.readStringOrNull(offsets[14]),
-    url: reader.readString(offsets[15]),
+    runtime: reader.readLongOrNull(offsets[11]),
+    schedule: reader.readObjectOrNull<ShowSchedule>(
+      offsets[12],
+      ShowScheduleSchema.deserialize,
+      allOffsets,
+    ),
+    showId: reader.readLong(offsets[13]),
+    status: reader.readString(offsets[14]),
+    summary: reader.readStringOrNull(offsets[15]),
+    type: reader.readStringOrNull(offsets[16]),
+    url: reader.readString(offsets[17]),
   );
   object.id = id;
   return object;
@@ -229,30 +274,40 @@ P _showModelDeserializeProp<P>(
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectOrNull<ShowLinks>(offset, ShowLinksSchema.deserialize, allOffsets))
+          as P;
     case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
       return (reader.readObjectOrNull<ShowNetwork>(
             offset,
             ShowNetworkSchema.deserialize,
             allOffsets,
           ))
           as P;
-    case 8:
-      return (reader.readStringOrNull(offset)) as P;
     case 9:
+      return (reader.readStringOrNull(offset)) as P;
+    case 10:
       return (reader.readObjectOrNull<ShowRating>(offset, ShowRatingSchema.deserialize, allOffsets))
           as P;
-    case 10:
-      return (reader.readLongOrNull(offset)) as P;
     case 11:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 12:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectOrNull<ShowSchedule>(
+            offset,
+            ShowScheduleSchema.deserialize,
+            allOffsets,
+          ))
+          as P;
     case 13:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 14:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 15:
+      return (reader.readStringOrNull(offset)) as P;
+    case 16:
+      return (reader.readStringOrNull(offset)) as P;
+    case 17:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -910,6 +965,18 @@ extension ShowModelQueryFilter on QueryBuilder<ShowModel, ShowModel, QFilterCond
     });
   }
 
+  QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> linksIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(property: r'links'));
+    });
+  }
+
+  QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> linksIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(property: r'links'));
+    });
+  }
+
   QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1264,6 +1331,18 @@ extension ShowModelQueryFilter on QueryBuilder<ShowModel, ShowModel, QFilterCond
           includeUpper: includeUpper,
         ),
       );
+    });
+  }
+
+  QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> scheduleIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(property: r'schedule'));
+    });
+  }
+
+  QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> scheduleIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(property: r'schedule'));
     });
   }
 
@@ -1854,6 +1933,12 @@ extension ShowModelQueryObject on QueryBuilder<ShowModel, ShowModel, QFilterCond
     });
   }
 
+  QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> links(FilterQuery<ShowLinks> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'links');
+    });
+  }
+
   QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> network(FilterQuery<ShowNetwork> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'network');
@@ -1863,6 +1948,12 @@ extension ShowModelQueryObject on QueryBuilder<ShowModel, ShowModel, QFilterCond
   QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> rating(FilterQuery<ShowRating> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'rating');
+    });
+  }
+
+  QueryBuilder<ShowModel, ShowModel, QAfterFilterCondition> schedule(FilterQuery<ShowSchedule> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'schedule');
     });
   }
 }
@@ -2266,6 +2357,12 @@ extension ShowModelQueryProperty on QueryBuilder<ShowModel, ShowModel, QQueryPro
     });
   }
 
+  QueryBuilder<ShowModel, ShowLinks?, QQueryOperations> linksProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'links');
+    });
+  }
+
   QueryBuilder<ShowModel, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -2293,6 +2390,12 @@ extension ShowModelQueryProperty on QueryBuilder<ShowModel, ShowModel, QQueryPro
   QueryBuilder<ShowModel, int?, QQueryOperations> runtimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'runtime');
+    });
+  }
+
+  QueryBuilder<ShowModel, ShowSchedule?, QQueryOperations> scheduleProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'schedule');
     });
   }
 
@@ -2364,7 +2467,7 @@ ShowRating _showRatingDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = ShowRating(average: reader.readDoubleOrNull(offsets[0]));
+  final object = ShowRating(average: reader.readDoubleOrNull(offsets[0]) ?? 0.0);
   return object;
 }
 
@@ -2376,27 +2479,15 @@ P _showRatingDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 extension ShowRatingQueryFilter on QueryBuilder<ShowRating, ShowRating, QFilterCondition> {
-  QueryBuilder<ShowRating, ShowRating, QAfterFilterCondition> averageIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(property: r'average'));
-    });
-  }
-
-  QueryBuilder<ShowRating, ShowRating, QAfterFilterCondition> averageIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(property: r'average'));
-    });
-  }
-
   QueryBuilder<ShowRating, ShowRating, QAfterFilterCondition> averageEqualTo(
-    double? value, {
+    double value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -2407,7 +2498,7 @@ extension ShowRatingQueryFilter on QueryBuilder<ShowRating, ShowRating, QFilterC
   }
 
   QueryBuilder<ShowRating, ShowRating, QAfterFilterCondition> averageGreaterThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -2424,7 +2515,7 @@ extension ShowRatingQueryFilter on QueryBuilder<ShowRating, ShowRating, QFilterC
   }
 
   QueryBuilder<ShowRating, ShowRating, QAfterFilterCondition> averageLessThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -2441,8 +2532,8 @@ extension ShowRatingQueryFilter on QueryBuilder<ShowRating, ShowRating, QFilterC
   }
 
   QueryBuilder<ShowRating, ShowRating, QAfterFilterCondition> averageBetween(
-    double? lower,
-    double? upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -3805,3 +3896,967 @@ extension ShowImageQueryFilter on QueryBuilder<ShowImage, ShowImage, QFilterCond
 }
 
 extension ShowImageQueryObject on QueryBuilder<ShowImage, ShowImage, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const ShowLinksSchema = Schema(
+  name: r'ShowLinks',
+  id: -4274917239453427662,
+  properties: {
+    r'previousEpisodeHref': PropertySchema(
+      id: 0,
+      name: r'previousEpisodeHref',
+      type: IsarType.string,
+    ),
+    r'previousEpisodeName': PropertySchema(
+      id: 1,
+      name: r'previousEpisodeName',
+      type: IsarType.string,
+    ),
+    r'selfHref': PropertySchema(id: 2, name: r'selfHref', type: IsarType.string),
+  },
+  estimateSize: _showLinksEstimateSize,
+  serialize: _showLinksSerialize,
+  deserialize: _showLinksDeserialize,
+  deserializeProp: _showLinksDeserializeProp,
+);
+
+int _showLinksEstimateSize(ShowLinks object, List<int> offsets, Map<Type, List<int>> allOffsets) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.previousEpisodeHref;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.previousEpisodeName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.selfHref;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _showLinksSerialize(
+  ShowLinks object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.previousEpisodeHref);
+  writer.writeString(offsets[1], object.previousEpisodeName);
+  writer.writeString(offsets[2], object.selfHref);
+}
+
+ShowLinks _showLinksDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = ShowLinks(
+    previousEpisodeHref: reader.readStringOrNull(offsets[0]),
+    previousEpisodeName: reader.readStringOrNull(offsets[1]),
+    selfHref: reader.readStringOrNull(offsets[2]),
+  );
+  return object;
+}
+
+P _showLinksDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringOrNull(offset)) as P;
+    case 1:
+      return (reader.readStringOrNull(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension ShowLinksQueryFilter on QueryBuilder<ShowLinks, ShowLinks, QFilterCondition> {
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'previousEpisodeHref'),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'previousEpisodeHref'),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'previousEpisodeHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'previousEpisodeHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'previousEpisodeHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'previousEpisodeHref',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'previousEpisodeHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'previousEpisodeHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'previousEpisodeHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'previousEpisodeHref',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'previousEpisodeHref', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeHrefIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'previousEpisodeHref', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'previousEpisodeName'),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'previousEpisodeName'),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'previousEpisodeName',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'previousEpisodeName',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'previousEpisodeName',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'previousEpisodeName',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'previousEpisodeName',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'previousEpisodeName',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'previousEpisodeName',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'previousEpisodeName',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'previousEpisodeName', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> previousEpisodeNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'previousEpisodeName', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(property: r'selfHref'));
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(property: r'selfHref'));
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'selfHref', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'selfHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'selfHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'selfHref',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'selfHref',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(property: r'selfHref', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(property: r'selfHref', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'selfHref',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(property: r'selfHref', value: ''));
+    });
+  }
+
+  QueryBuilder<ShowLinks, ShowLinks, QAfterFilterCondition> selfHrefIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'selfHref', value: ''),
+      );
+    });
+  }
+}
+
+extension ShowLinksQueryObject on QueryBuilder<ShowLinks, ShowLinks, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const ShowScheduleSchema = Schema(
+  name: r'ShowSchedule',
+  id: 245316170333957701,
+  properties: {
+    r'days': PropertySchema(id: 0, name: r'days', type: IsarType.stringList),
+    r'time': PropertySchema(id: 1, name: r'time', type: IsarType.string),
+  },
+  estimateSize: _showScheduleEstimateSize,
+  serialize: _showScheduleSerialize,
+  deserialize: _showScheduleDeserialize,
+  deserializeProp: _showScheduleDeserializeProp,
+);
+
+int _showScheduleEstimateSize(
+  ShowSchedule object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final list = object.days;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += value.length * 3;
+        }
+      }
+    }
+  }
+  {
+    final value = object.time;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _showScheduleSerialize(
+  ShowSchedule object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeStringList(offsets[0], object.days);
+  writer.writeString(offsets[1], object.time);
+}
+
+ShowSchedule _showScheduleDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = ShowSchedule(
+    days: reader.readStringList(offsets[0]),
+    time: reader.readStringOrNull(offsets[1]),
+  );
+  return object;
+}
+
+P _showScheduleDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringList(offset)) as P;
+    case 1:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension ShowScheduleQueryFilter on QueryBuilder<ShowSchedule, ShowSchedule, QFilterCondition> {
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(property: r'days'));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(property: r'days'));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'days', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'days',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'days',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'days',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(property: r'days', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(property: r'days', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(property: r'days', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(property: r'days', wildcard: pattern, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(property: r'days', value: ''));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(property: r'days', value: ''));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'days', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'days', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'days', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'days', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'days', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> daysLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(r'days', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(property: r'time'));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(property: r'time'));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'time', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'time',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'time',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'time',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(property: r'time', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(property: r'time', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(property: r'time', value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(property: r'time', wildcard: pattern, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(property: r'time', value: ''));
+    });
+  }
+
+  QueryBuilder<ShowSchedule, ShowSchedule, QAfterFilterCondition> timeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(property: r'time', value: ''));
+    });
+  }
+}
+
+extension ShowScheduleQueryObject on QueryBuilder<ShowSchedule, ShowSchedule, QFilterCondition> {}
