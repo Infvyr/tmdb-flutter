@@ -5,17 +5,19 @@ class FilterBottomSheet extends StatefulWidget {
   const FilterBottomSheet({
     required this.initialFilter,
     required this.onFilterApplied,
-    this.availableTypes = const [],
+    this.availableGenres = const [],
     this.availableStatuses = const [],
     this.availableCountries = const {},
+    this.currentQuery,
     super.key,
   });
 
   final ShowFilter initialFilter;
   final void Function(ShowFilter) onFilterApplied;
-  final List<String> availableTypes;
+  final List<String> availableGenres;
   final List<String> availableStatuses;
   final Map<String, String> availableCountries;
+  final SearchQuery? currentQuery;
 
   @override
   State<FilterBottomSheet> createState() => _FilterBottomSheetState();
@@ -34,47 +36,85 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     setState(() => _filter = newFilter);
   }
 
+  void _handleReset(ShowFilter resetFilter) {
+    _updateFilter(resetFilter);
+    widget.onFilterApplied(resetFilter);
+  }
+
   @override
   Widget build(BuildContext context) => DraggableScrollableSheet(
     expand: false,
-    initialChildSize: 0.7,
-    minChildSize: 0.5,
-    maxChildSize: 0.95,
-    builder: (context, scrollController) => SingleChildScrollView(
-      controller: scrollController,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          spacing: 16,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FilterHeader(filter: _filter, onFilterReset: _updateFilter),
-            FilterSortSection(filter: _filter, onFilterChanged: _updateFilter),
-            FilterTypeSection(
-              filter: _filter,
-              onFilterChanged: _updateFilter,
-              availableTypes: widget.availableTypes,
-            ),
-            FilterStatusSection(
-              filter: _filter,
-              onFilterChanged: _updateFilter,
-              availableStatuses: widget.availableStatuses,
-            ),
-            FilterRatingSection(filter: _filter, onFilterChanged: _updateFilter),
-            FilterCountrySection(
-              filter: _filter,
-              onFilterChanged: _updateFilter,
-              availableCountries: widget.availableCountries,
-            ),
-            const SizedBox(height: 8),
-            FilterActionButtons(
-              filter: _filter,
-              onApply: widget.onFilterApplied,
-              onCancel: () => Navigator.pop(context),
-            ),
-          ],
+    initialChildSize: FilterConstants.bottomSheetInitialSize,
+    minChildSize: FilterConstants.bottomSheetMinSize,
+    maxChildSize: FilterConstants.bottomSheetMaxSize,
+    builder: (context, scrollController) => Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(FilterConstants.spacingXl),
+          child: FilterHeader(
+            filter: _filter,
+            onFilterReset: (resetFilter) {
+              _handleReset(resetFilter);
+              if (mounted) {
+                Navigator.of(context, rootNavigator: false).maybePop();
+              }
+            },
+          ),
         ),
-      ),
+        // Scrollable Content
+        Expanded(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: FilterConstants.spacingXl,
+                right: FilterConstants.spacingXl,
+                bottom: FilterConstants.spacingXxl,
+              ),
+              child: Column(
+                spacing: FilterConstants.spacingXl,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.currentQuery != null)
+                    CurrentSearchDisplay(searchQuery: widget.currentQuery!),
+                  FilterSummaryChips(filter: _filter, onRemoveFilter: _updateFilter),
+                  FilterSortSectionOptimized(
+                    initialFilter: _filter,
+                    onFilterChanged: _updateFilter,
+                  ),
+                  FilterGenreDialog(
+                    filter: _filter,
+                    onFilterChanged: _updateFilter,
+                    availableGenres: widget.availableGenres,
+                  ),
+                  FilterStatusSection(
+                    filter: _filter,
+                    onFilterChanged: _updateFilter,
+                    availableStatuses: widget.availableStatuses,
+                  ),
+                  FilterRatingSectionOptimized(
+                    initialFilter: _filter,
+                    onFilterChanged: _updateFilter,
+                  ),
+                  FilterDateRangeSection(filter: _filter, onFilterChanged: _updateFilter),
+                  FilterCountryDialog(
+                    filter: _filter,
+                    onFilterChanged: _updateFilter,
+                    availableCountries: widget.availableCountries,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(FilterConstants.spacingXl),
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+          ),
+          child: FilterActionButtons(filter: _filter, onApply: widget.onFilterApplied),
+        ),
+      ],
     ),
   );
 }

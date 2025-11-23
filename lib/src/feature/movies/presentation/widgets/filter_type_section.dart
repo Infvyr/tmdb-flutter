@@ -1,27 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
 
-class FilterTypeSection extends StatelessWidget {
+class FilterTypeSection extends StatefulWidget {
   const FilterTypeSection({
     required this.filter,
     required this.onFilterChanged,
-    required this.availableTypes,
+    required this.availableGenres,
     super.key,
   });
 
   final ShowFilter filter;
   final void Function(ShowFilter) onFilterChanged;
-  final List<String> availableTypes;
+  final List<String> availableGenres;
+
+  @override
+  State<FilterTypeSection> createState() => _FilterTypeSectionState();
+}
+
+class _FilterTypeSectionState extends State<FilterTypeSection> {
+  late List<String> sortedGenres;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateSortedGenres();
+  }
+
+  @override
+  void didUpdateWidget(FilterTypeSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.availableGenres != widget.availableGenres) {
+      _updateSortedGenres();
+    }
+    // Trigger rebuild when filter changes (e.g., on reset)
+    if (oldWidget.filter != widget.filter) {
+      setState(() {});
+    }
+  }
+
+  void _updateSortedGenres() {
+    sortedGenres = List<String>.from(widget.availableGenres)..sort();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (availableTypes.isEmpty) {
+    if (widget.availableGenres.isEmpty) {
       return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Type', style: TextStyle(fontWeight: FontWeight.w600)),
+          Text('Genre', style: TextStyle(fontWeight: FontWeight.w600)),
           SizedBox(height: 8),
-          Text('No types available', style: TextStyle(fontStyle: FontStyle.italic)),
+          Text('No genres available', style: TextStyle(fontStyle: FontStyle.italic)),
         ],
       );
     }
@@ -29,23 +58,24 @@ class FilterTypeSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Type', style: TextStyle(fontWeight: FontWeight.w600)),
+        const Text('Genre', style: TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 8,
+          spacing: 6,
           runSpacing: 8,
-          children: availableTypes.map((type) {
-            return FilterChip(
-              label: Text(type),
-              selected: filter.types.contains(type),
+          children: sortedGenres.map((genre) {
+            final isSelected = widget.filter.genres.contains(genre);
+            return ChoiceChip(
+              label: Text(genre),
+              selected: isSelected,
               onSelected: (selected) {
-                final updatedTypes = List<String>.from(filter.types);
+                final updatedGenres = List<String>.from(widget.filter.genres);
                 if (selected) {
-                  updatedTypes.add(type);
+                  updatedGenres.add(genre);
                 } else {
-                  updatedTypes.remove(type);
+                  updatedGenres.remove(genre);
                 }
-                onFilterChanged(filter.copyWith(types: updatedTypes));
+                widget.onFilterChanged(widget.filter.copyWith(genres: updatedGenres));
               },
             );
           }).toList(),

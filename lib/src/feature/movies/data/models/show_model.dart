@@ -64,9 +64,7 @@ class ShowModel {
   factory ShowModel.fromJson(Map<String, dynamic> json) {
     final genresList = json['genres'] as List<dynamic>?;
     final genres = genresList != null
-        ? List<String>.from(
-            genresList.whereType<String>(),
-          )
+        ? List<String>.from(genresList.whereType<String>())
         : <String>[];
 
     return ShowModel(
@@ -189,7 +187,9 @@ class ShowNetwork {
   factory ShowNetwork.fromJson(Map<String, dynamic> json) => ShowNetwork(
     networkId: json['id'] as int? ?? 0,
     name: json['name'] as String? ?? '',
-    country: json['country'] != null ? Country.fromJson(json['country'] as Map<String, dynamic>) : null,
+    country: json['country'] != null
+        ? Country.fromJson(json['country'] as Map<String, dynamic>)
+        : null,
   );
 
   int? networkId;

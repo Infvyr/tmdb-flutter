@@ -10,6 +10,8 @@ class ShowsLoadedView extends StatefulWidget {
     required this.onSearch,
     required this.onFilterChanged,
     required this.onPageChanged,
+    required this.currentQuery,
+    required this.currentFilter,
     super.key,
   });
 
@@ -19,6 +21,8 @@ class ShowsLoadedView extends StatefulWidget {
   final void Function(SearchQuery) onSearch;
   final void Function(ShowFilter) onFilterChanged;
   final void Function(int) onPageChanged;
+  final SearchQuery currentQuery;
+  final ShowFilter currentFilter;
 
   @override
   State<ShowsLoadedView> createState() => _ShowsLoadedViewState();
@@ -57,12 +61,19 @@ class _ShowsLoadedViewState extends State<ShowsLoadedView> {
         ShowsSearchFilterHeader(
           onSearch: widget.onSearch,
           onFilterChanged: widget.onFilterChanged,
-          availableTypes: _filterOptions.types,
+          currentQuery: widget.currentQuery,
+          availableGenres: _filterOptions.genres,
           availableStatuses: _filterOptions.statuses,
           availableCountries: _filterOptions.countries,
-          showFilterButton: widget.shows.isNotEmpty,
         ),
-        Expanded(child: LoadedView(widget.shows, isFromCache: widget.isFromCache)),
+        Expanded(
+          child: LoadedView(
+            widget.shows,
+            isFromCache: widget.isFromCache,
+            currentQuery: widget.currentQuery,
+            currentFilter: widget.currentFilter,
+          ),
+        ),
         if (widget.shows.isNotEmpty)
           Padding(
             padding: const EdgeInsets.all(16),

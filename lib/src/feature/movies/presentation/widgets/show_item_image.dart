@@ -25,11 +25,7 @@ class ShowItemImage extends StatelessWidget {
                 ),
               ),
               placeholder: (context, url) => const Center(
-                child: SizedBox(
-                  width: 36,
-                  height: 36,
-                  child: CircularProgressIndicator(),
-                ),
+                child: SizedBox(width: 36, height: 36, child: CircularProgressIndicator()),
               ),
               errorWidget: (_, url, error) => Column(
                 children: [

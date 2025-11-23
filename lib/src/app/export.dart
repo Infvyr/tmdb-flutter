@@ -1,4 +1,5 @@
 export 'config/bloc_observer.dart';
+export 'constants/filter_constants.dart';
 export 'database/isar_service.dart';
 export 'di/injector.dart';
 export 'network/http_client.dart';

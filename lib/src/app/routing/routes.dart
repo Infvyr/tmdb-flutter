@@ -40,9 +40,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const Scaffold(body: Text('Profile')));
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(child: Text(r'No route defined for ${settings.name}')),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text(r'No route defined for ${settings.name}'))),
         );
     }
   }

@@ -19,11 +19,7 @@ class LoadShows extends ShowsEvent {
 class LoadLocalShows extends ShowsEvent {}
 
 class SearchShowsEvent extends ShowsEvent {
-  const SearchShowsEvent(
-    this.query, {
-    this.filter,
-    this.pagination,
-  });
+  const SearchShowsEvent(this.query, {this.filter, this.pagination});
 
   final SearchQuery query;
   final ShowFilter? filter;

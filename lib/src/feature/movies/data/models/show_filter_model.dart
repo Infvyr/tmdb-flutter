@@ -8,7 +8,7 @@ class ShowFilterModel {
   ShowFilterModel({
     this.sortByValue = 'name',
     this.sortOrderValue = 'asc',
-    this.types = const [],
+    this.genres = const [],
     this.statuses = const [],
     this.premieredFrom,
     this.premieredTo,
@@ -22,7 +22,7 @@ class ShowFilterModel {
   factory ShowFilterModel.fromEntity(ShowFilter entity) => ShowFilterModel(
     sortByValue: entity.sortBy.toString().split('.').last,
     sortOrderValue: entity.sortOrder.toString().split('.').last,
-    types: entity.types,
+    genres: entity.genres,
     statuses: entity.statuses,
     premieredFrom: entity.premieredFrom,
     premieredTo: entity.premieredTo,
@@ -37,7 +37,7 @@ class ShowFilterModel {
 
   late String sortByValue;
   late String sortOrderValue;
-  late List<String> types;
+  late List<String> genres;
   late List<String> statuses;
   late String? premieredFrom;
   late String? premieredTo;
@@ -54,7 +54,7 @@ class ShowFilterModel {
     return ShowFilter(
       sortBy: sortByValue,
       sortOrder: sortOrderValue,
-      types: types,
+      genres: genres,
       statuses: statuses,
       premieredFrom: premieredFrom,
       premieredTo: premieredTo,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
 
-class FilterCountrySection extends StatelessWidget {
+class FilterCountrySection extends StatefulWidget {
   const FilterCountrySection({
     required this.filter,
     required this.onFilterChanged,
@@ -14,8 +14,38 @@ class FilterCountrySection extends StatelessWidget {
   final Map<String, String> availableCountries;
 
   @override
+  State<FilterCountrySection> createState() => _FilterCountrySectionState();
+}
+
+class _FilterCountrySectionState extends State<FilterCountrySection> {
+  late List<MapEntry<String, String>> sortedCountries;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateSortedCountries();
+  }
+
+  @override
+  void didUpdateWidget(FilterCountrySection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.availableCountries != widget.availableCountries) {
+      _updateSortedCountries();
+    }
+    // Trigger rebuild when filter changes (e.g., on reset)
+    if (oldWidget.filter != widget.filter) {
+      setState(() {});
+    }
+  }
+
+  void _updateSortedCountries() {
+    sortedCountries = widget.availableCountries.entries.toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (availableCountries.isEmpty) {
+    if (widget.availableCountries.isEmpty) {
       return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,32 +56,30 @@ class FilterCountrySection extends StatelessWidget {
       );
     }
 
-    final countryEntries = availableCountries.entries.toList()
-      ..sort((a, b) => a.value.compareTo(b.value));
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Country', style: TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 8,
+          spacing: 6,
           runSpacing: 8,
-          children: countryEntries.map((entry) {
+          children: sortedCountries.map((entry) {
             final countryCode = entry.key;
             final countryName = entry.value;
+            final isSelected = widget.filter.countries.contains(countryCode);
 
-            return FilterChip(
+            return ChoiceChip(
               label: Text(countryName),
-              selected: filter.countries.contains(countryCode),
+              selected: isSelected,
               onSelected: (selected) {
-                final updatedCountries = List<String>.from(filter.countries);
+                final updatedCountries = List<String>.from(widget.filter.countries);
                 if (selected) {
                   updatedCountries.add(countryCode);
                 } else {
                   updatedCountries.remove(countryCode);
                 }
-                onFilterChanged(filter.copyWith(countries: updatedCountries));
+                widget.onFilterChanged(widget.filter.copyWith(countries: updatedCountries));
               },
             );
           }).toList(),

@@ -16,11 +16,7 @@ class ShowStatus extends StatelessWidget {
     return Chip(
       label: Text(
         status,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w300,
-        ),
+        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w300),
       ),
       backgroundColor: getStatusColor(),
       visualDensity: const VisualDensity(horizontal: -4, vertical: -4),

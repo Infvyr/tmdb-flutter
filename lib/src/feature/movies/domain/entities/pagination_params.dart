@@ -1,11 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class PaginationParams extends Equatable {
-  const PaginationParams({
-    this.currentPage = 1,
-    this.pageSize = 20,
-    this.totalItems = 0,
-  });
+  const PaginationParams({this.currentPage = 1, this.pageSize = 20, this.totalItems = 0});
 
   final int currentPage;
   final int pageSize;
@@ -15,11 +11,7 @@ class PaginationParams extends Equatable {
   bool get hasPreviousPage => currentPage > 1;
   bool get hasNextPage => currentPage < totalPages;
 
-  PaginationParams copyWith({
-    int? currentPage,
-    int? pageSize,
-    int? totalItems,
-  }) {
+  PaginationParams copyWith({int? currentPage, int? pageSize, int? totalItems}) {
     return PaginationParams(
       currentPage: currentPage ?? this.currentPage,
       pageSize: pageSize ?? this.pageSize,

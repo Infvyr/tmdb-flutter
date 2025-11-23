@@ -29,11 +29,19 @@ class ShowsScreen extends StatelessWidget {
     body: BlocBuilder<ShowsBloc, ShowsState>(
       builder: (context, state) => switch (state) {
         ShowsInitial() || ShowsLoading() => const LoadingView(),
-        ShowsLoaded(:final shows, :final isFromCache, :final pagination) =>
+        ShowsLoaded(
+          :final shows,
+          :final isFromCache,
+          :final pagination,
+          :final currentQuery,
+          :final currentFilter,
+        ) =>
           ShowsLoadedView(
             shows: shows,
             isFromCache: isFromCache,
             pagination: pagination ?? const PaginationParams(),
+            currentQuery: currentQuery ?? const SearchQuery(),
+            currentFilter: currentFilter ?? const ShowFilter(),
             onSearch: (query) => _onSearch(context, query),
             onFilterChanged: (filter) => _onFilterChanged(context, filter),
             onPageChanged: (page) => _onPageChanged(context, page),

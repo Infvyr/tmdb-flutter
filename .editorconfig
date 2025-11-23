@@ -1,0 +1,29 @@
+# EditorConfig for consistent code formatting across IDEs
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Dart files
+[*.dart]
+# Use 2 spaces for indentation
+indent_style = space
+indent_size = 2
+# Line length
+max_line_length = 100
+# Insert trailing comma
+# Note: This is enforced by analysis_options.yaml with require_trailing_commas
+
+# YAML files
+[*.{yaml,yml}]
+indent_style = space
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_style = space
+indent_size = 2

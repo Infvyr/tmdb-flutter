@@ -4,8 +4,7 @@ PODS:
   - FlutterMacOS (1.0.0)
   - isar_flutter_libs (1.0.0):
     - FlutterMacOS
-  - path_provider_foundation (0.0.1):
-    - Flutter
+  - objective_c (0.0.1):
     - FlutterMacOS
   - sqflite_darwin (0.0.4):
     - Flutter
@@ -15,7 +14,7 @@ DEPENDENCIES:
   - connectivity_plus (from `Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - isar_flutter_libs (from `Flutter/ephemeral/.symlinks/plugins/isar_flutter_libs/macos`)
-  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+  - objective_c (from `Flutter/ephemeral/.symlinks/plugins/objective_c/macos`)
   - sqflite_darwin (from `Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin`)
 
 EXTERNAL SOURCES:
@@ -25,8 +24,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   isar_flutter_libs:
     :path: Flutter/ephemeral/.symlinks/plugins/isar_flutter_libs/macos
-  path_provider_foundation:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+  objective_c:
+    :path: Flutter/ephemeral/.symlinks/plugins/objective_c/macos
   sqflite_darwin:
     :path: Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin
 
@@ -34,7 +33,7 @@ SPEC CHECKSUMS:
   connectivity_plus: 0a976dfd033b59192912fa3c6c7b54aab5093802
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   isar_flutter_libs: 43385c99864c168fadba7c9adeddc5d38838ca6a
-  path_provider_foundation: 0b743cbb62d8e47eab856f09262bb8c1ddcfe6ba
+  objective_c: e5f8194456e8fc943e034d1af00510a1bc29c067
   sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
 
 PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009

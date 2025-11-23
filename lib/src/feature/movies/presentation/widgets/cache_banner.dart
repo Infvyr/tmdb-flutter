@@ -5,11 +5,7 @@ class CacheBanner extends MaterialBanner {
     : super(
         content: Row(
           children: [
-            Icon(
-              Icons.storage,
-              size: 16,
-              color: Theme.of(context).colorScheme.onTertiaryContainer,
-            ),
+            Icon(Icons.storage, size: 16, color: Theme.of(context).colorScheme.onTertiaryContainer),
             const SizedBox(width: 8),
             Text(
               'Loaded from cache',

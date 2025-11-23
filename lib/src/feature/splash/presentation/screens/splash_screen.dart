@@ -15,15 +15,11 @@ class _SplashScreenState extends State<SplashScreen> {
     _redirectToMainScreen();
   }
 
-  Future<void> _redirectToMainScreen() async =>
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          Navigator.popAndPushNamed(
-            context,
-            AppRoutes.shows,
-          );
-        }
-      });
+  Future<void> _redirectToMainScreen() async => Future.delayed(const Duration(seconds: 2), () {
+    if (mounted) {
+      Navigator.popAndPushNamed(context, AppRoutes.shows);
+    }
+  });
 
   @override
   Widget build(BuildContext context) => const Placeholder(child: Text('Splash screen'));

@@ -41,9 +41,7 @@ void _setupDataLayer() {
   );
 
   // Local data source
-  getIt.registerSingleton<ShowsLocalDataSource>(
-    ShowsLocalDataSourceImpl(isar: getIt<Isar>()),
-  );
+  getIt.registerSingleton<ShowsLocalDataSource>(ShowsLocalDataSourceImpl(isar: getIt<Isar>()));
 
   // Search and filter local data source
   getIt.registerSingleton<ShowsSearchFilterLocalDatasource>(
@@ -60,9 +58,7 @@ void _setupDataLayer() {
   );
 
   // Filter options repository
-  getIt.registerSingleton<FilterOptionsRepository>(
-    FilterOptionsRepositoryImpl(),
-  );
+  getIt.registerSingleton<FilterOptionsRepository>(FilterOptionsRepositoryImpl());
 }
 
 void _setupPresentationLayer() {

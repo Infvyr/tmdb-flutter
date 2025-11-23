@@ -70,10 +70,7 @@ class _ShowsSearchBarState extends State<ShowsSearchBar> {
       return SearchBar(
         elevation: WidgetStateProperty.all(0),
         controller: controller,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: Icon(Icons.search),
-        ),
+        leading: const Padding(padding: EdgeInsets.only(left: 8), child: Icon(Icons.search)),
         trailing: _currentText.isNotEmpty
             ? [IconButton(icon: const Icon(Icons.clear), onPressed: _handleClear)]
             : null,

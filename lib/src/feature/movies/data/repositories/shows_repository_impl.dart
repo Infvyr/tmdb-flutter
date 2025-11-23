@@ -59,18 +59,10 @@ class ShowsRepositoryImpl implements ShowsRepository {
   List<Show> filterShows(List<Show> shows, ShowFilter filter) {
     var filtered = shows;
 
-    // Filter by types (Scripted, Reality, etc.)
-    if (filter.types.isNotEmpty) {
+    // Filter by genres (Adventure, Comedy, Drama, etc.)
+    if (filter.genres.isNotEmpty) {
       filtered = filtered
-          .where((show) => show.type != null && filter.types.contains(show.type))
-          .toList();
-    }
-
-    // Filter by genres (Drama, Comedy, etc.)
-    if (filter.statuses.isNotEmpty) {
-      // Note: Using statuses for genres filtering as per API structure
-      filtered = filtered
-          .where((show) => filter.statuses.any((genre) => show.genres.contains(genre)))
+          .where((show) => filter.genres.any((genre) => show.genres.contains(genre)))
           .toList();
     }
 
@@ -143,26 +135,28 @@ class ShowsRepositoryImpl implements ShowsRepository {
       }).toList();
     }
 
-    // Sort
-    switch (filter.sortBy) {
-      case SortField.name:
-        filtered.sort((a, b) => a.name.compareTo(b.name));
-      case SortField.rating:
-        filtered.sort(
-          (a, b) => (b.rating?.average ?? 0).compareTo(a.rating?.average ?? 0),
-        );
-      case SortField.premiered:
-        filtered.sort((a, b) {
-          final dateA = DateTime.tryParse(a.premiered ?? '') ?? DateTime(0);
-          final dateB = DateTime.tryParse(b.premiered ?? '') ?? DateTime(0);
-          return dateA.compareTo(dateB);
-        });
-      case SortField.ended:
-        filtered.sort((a, b) {
-          final dateA = DateTime.tryParse(a.ended ?? '') ?? DateTime.now();
-          final dateB = DateTime.tryParse(b.ended ?? '') ?? DateTime.now();
-          return dateA.compareTo(dateB);
-        });
+    // Sort (only if sortBy is specified)
+    if (filter.sortBy != null) {
+      switch (filter.sortBy) {
+        case SortField.name:
+          filtered.sort((a, b) => a.name.compareTo(b.name));
+        case SortField.rating:
+          filtered.sort((a, b) => (b.rating?.average ?? 0).compareTo(a.rating?.average ?? 0));
+        case SortField.premiered:
+          filtered.sort((a, b) {
+            final dateA = DateTime.tryParse(a.premiered ?? '') ?? DateTime(0);
+            final dateB = DateTime.tryParse(b.premiered ?? '') ?? DateTime(0);
+            return dateA.compareTo(dateB);
+          });
+        case SortField.ended:
+          filtered.sort((a, b) {
+            final dateA = DateTime.tryParse(a.ended ?? '') ?? DateTime.now();
+            final dateB = DateTime.tryParse(b.ended ?? '') ?? DateTime.now();
+            return dateA.compareTo(dateB);
+          });
+        default:
+          break;
+      }
     }
 
     // Reverse for DESC order

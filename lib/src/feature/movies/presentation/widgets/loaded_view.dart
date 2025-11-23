@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
 
 class LoadedView extends StatelessWidget {
-  const LoadedView(this.shows, {super.key, required this.isFromCache});
+  const LoadedView(
+    this.shows, {
+    super.key,
+    required this.isFromCache,
+    required this.currentQuery,
+    required this.currentFilter,
+  });
 
   final List<Show> shows;
   final bool isFromCache;
+  final SearchQuery currentQuery;
+  final ShowFilter currentFilter;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -19,7 +27,7 @@ class LoadedView extends StatelessWidget {
         })(),
       Expanded(
         child: shows.isEmpty
-            ? const Center(child: Text('No shows found. Try a different search term.'))
+            ? EmptyStateMessage(currentQuery: currentQuery, currentFilter: currentFilter)
             : ShowsView(shows),
       ),
     ],
