@@ -7,3 +7,4 @@ export 'routing/router.dart';
 export 'routing/routes.dart';
 export 'utils/genre_color.dart';
 export 'utils/result.dart';
+export 'utils/status_color.dart';

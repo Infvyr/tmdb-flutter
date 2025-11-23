@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdbmaze/src/app/di/service_locator.dart';
+import 'package:tmdbmaze/src/feature/movie/export.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
 import 'package:tmdbmaze/src/feature/splash/export.dart';
 
@@ -35,7 +36,9 @@ class Routes {
             child: const ShowsScreen(),
           ),
         );
-
+      case AppRoutes.show:
+        final show = settings.arguments as Show;
+        return MaterialPageRoute(builder: (_) => MovieScreen(show: show));
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const Scaffold(body: Text('Profile')));
       default:
