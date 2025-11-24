@@ -23,7 +23,7 @@ class MainApp extends StatelessWidget {
         tertiary: Colors.white70,
       ),
     ),
-    initialRoute: AppRoutes.splash,
+    initialRoute: AppRoutes.shows,
     onGenerateRoute: Routes.generateRoute,
   );
 }

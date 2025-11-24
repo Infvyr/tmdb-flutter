@@ -11,7 +11,11 @@ class FilterActionButtons extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(
-        child: ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        child: TextButton(
+          onPressed: () => Navigator.pop(context),
+          style: ButtonStyle(elevation: WidgetStateProperty.all(0)),
+          child: const Text('Cancel'),
+        ),
       ),
       const SizedBox(width: 12),
       Expanded(

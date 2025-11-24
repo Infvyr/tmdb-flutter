@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdbmaze/src/app/di/service_locator.dart';
 import 'package:tmdbmaze/src/feature/movie/export.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
-import 'package:tmdbmaze/src/feature/splash/export.dart';
 
 class AppRoutes {
   factory AppRoutes() {
@@ -15,7 +14,6 @@ class AppRoutes {
 
   static AppRoutes? _instance;
 
-  static const splash = '/';
   static const shows = '/shows';
   static const show = '/show';
   static const profile = '/profile';
@@ -24,11 +22,6 @@ class AppRoutes {
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case AppRoutes.splash:
-        return MaterialPageRoute(
-          builder: (_) => const SplashScreen(),
-          settings: RouteSettings(name: settings.name),
-        );
       case AppRoutes.shows:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

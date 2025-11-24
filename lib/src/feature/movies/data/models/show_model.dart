@@ -194,6 +194,9 @@ class ShowRating {
   late double average;
 
   Map<String, dynamic> toJson() => {'average': average};
+
+  @override
+  String toString() => 'ShowRating(average: $average)';
 }
 
 @embedded
@@ -215,6 +218,9 @@ class ShowNetwork {
   Country? country;
 
   Map<String, dynamic> toJson() => {'id': networkId, 'name': name, 'country': country?.toJson()};
+
+  @override
+  String toString() => 'ShowNetwork(networkId: $networkId, name: $name, country: $country)';
 }
 
 @embedded
@@ -234,6 +240,9 @@ class Country {
   String? timezone;
 
   Map<String, dynamic> toJson() => {'name': name, 'code': code, 'timezone': timezone};
+
+  @override
+  String toString() => 'Country(name: $name, code: $code, timezone: $timezone)';
 }
 
 @embedded
@@ -249,6 +258,9 @@ class ShowExternals {
   int? thetvdb;
 
   Map<String, dynamic> toJson() => {'tvrage': tvrage, 'thetvdb': thetvdb};
+
+  @override
+  String toString() => 'ShowExternals(tvrage: $tvrage, thetvdb: $thetvdb)';
 }
 
 @embedded
@@ -264,6 +276,9 @@ class ShowImage {
   String? original;
 
   Map<String, dynamic> toJson() => {'medium': medium, 'original': original};
+
+  @override
+  String toString() => 'ShowImage(medium: $medium, original: $original)';
 }
 
 @embedded
@@ -290,6 +305,10 @@ class ShowLinks {
     'self': {'href': selfHref},
     'previousepisode': {'href': previousEpisodeHref, 'name': previousEpisodeName},
   };
+
+  @override
+  String toString() =>
+      'ShowLinks(self: $selfHref, previousEpisodeHref: $previousEpisodeHref,previousEpisodeName:$previousEpisodeName)';
 }
 
 @embedded
@@ -308,4 +327,7 @@ class ShowSchedule {
   List<String>? days;
 
   Map<String, dynamic> toJson() => {'time': time, 'days': days};
+
+  @override
+  String toString() => 'ShowSchedule(time: $time, days: $days)';
 }
