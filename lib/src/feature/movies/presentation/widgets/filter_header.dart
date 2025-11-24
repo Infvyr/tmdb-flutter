@@ -22,7 +22,13 @@ class FilterHeader extends StatelessWidget {
               content: const Text('This will clear all selected filters.'),
               actions: [
                 TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Reset')),
+                FilledButton(
+                  onPressed: () {
+                    Navigator.pop(ctx, false);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Reset'),
+                ),
               ],
             ),
           );
