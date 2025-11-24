@@ -8,6 +8,7 @@ class ShowsAppbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) => AppBar(
     title: const Text('Shows'),
     actions: const [ForceRefreshButton(), LoadFromStorageButton()],
+    automaticallyImplyLeading: false,
   );
 
   @override

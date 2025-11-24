@@ -56,20 +56,22 @@ class ShowsView extends StatelessWidget {
     final orientation = MediaQuery.of(context).orientation;
 
     return LayoutBuilder(
-      builder: (context, constraints) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: _getHorizontalPadding(constraints),
-          vertical: _getVerticalPadding(constraints),
-        ),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: _getCrossAxisCount(constraints, orientation),
-            mainAxisExtent: _getMainAxisExtent(constraints, orientation),
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+      builder: (context, constraints) => Scrollbar(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: _getHorizontalPadding(constraints),
+            vertical: _getVerticalPadding(constraints),
           ),
-          itemCount: shows.length,
-          itemBuilder: (context, index) => ShowItem(shows[index]),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _getCrossAxisCount(constraints, orientation),
+              mainAxisExtent: _getMainAxisExtent(constraints, orientation),
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: shows.length,
+            itemBuilder: (context, index) => ShowItem(shows[index]),
+          ),
         ),
       ),
     );

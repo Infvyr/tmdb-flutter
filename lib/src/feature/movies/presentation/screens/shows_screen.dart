@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
-import 'package:tmdbmaze/src/feature/movies/presentation/screens/shows_loaded_view.dart';
 import 'package:tmdbmaze/src/shared/export.dart';
 
 class ShowsScreen extends StatelessWidget {
@@ -23,6 +22,11 @@ class ShowsScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _onRefresh(BuildContext context) async {
+    context.read<ShowsBloc>().add(const LoadShows());
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: const ShowsAppbar(),
@@ -36,15 +40,18 @@ class ShowsScreen extends StatelessWidget {
           :final currentQuery,
           :final currentFilter,
         ) =>
-          ShowsLoadedView(
-            shows: shows,
-            isFromCache: isFromCache,
-            pagination: pagination ?? const PaginationParams(),
-            currentQuery: currentQuery ?? const SearchQuery(),
-            currentFilter: currentFilter ?? const ShowFilter(),
-            onSearch: (query) => _onSearch(context, query),
-            onFilterChanged: (filter) => _onFilterChanged(context, filter),
-            onPageChanged: (page) => _onPageChanged(context, page),
+          RefreshIndicator.adaptive(
+            onRefresh: () => _onRefresh(context),
+            child: ShowsLoadedView(
+              shows: shows,
+              isFromCache: isFromCache,
+              pagination: pagination ?? const PaginationParams(),
+              currentQuery: currentQuery ?? const SearchQuery(),
+              currentFilter: currentFilter ?? const ShowFilter(),
+              onSearch: (query) => _onSearch(context, query),
+              onFilterChanged: (filter) => _onFilterChanged(context, filter),
+              onPageChanged: (page) => _onPageChanged(context, page),
+            ),
           ),
         ShowsError(:final message) => ErrorView(
           message: message,

@@ -1,4 +1,3 @@
-export '../../app/constants/filter_constants.dart';
 export 'data/datasources/shows_local_datasource.dart';
 export 'data/datasources/shows_remote_datasource.dart';
 export 'data/datasources/shows_search_filter_local_datasource.dart';
@@ -15,6 +14,7 @@ export 'domain/repositories/filter_options_repository.dart';
 export 'domain/repositories/predefined_filter_options.dart';
 export 'domain/repositories/shows_repository.dart';
 export 'presentation/bloc/shows_bloc.dart';
+export 'presentation/screens/shows_loaded_view.dart';
 export 'presentation/screens/shows_screen.dart';
 export 'presentation/widgets/appbar.dart';
 export 'presentation/widgets/appbar_force_refresh_button.dart';

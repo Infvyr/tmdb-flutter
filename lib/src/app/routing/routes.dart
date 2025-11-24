@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdbmaze/src/app/di/service_locator.dart';
+import 'package:tmdbmaze/src/feature/connectivity/export.dart';
 import 'package:tmdbmaze/src/feature/movie/export.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
 
@@ -16,7 +17,6 @@ class AppRoutes {
 
   static const shows = '/shows';
   static const show = '/show';
-  static const profile = '/profile';
 }
 
 class Routes {
@@ -24,16 +24,17 @@ class Routes {
     switch (settings.name) {
       case AppRoutes.shows:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => getIt<ShowsBloc>()..add(const LoadShows()),
-            child: const ShowsScreen(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => getIt<ShowsBloc>()..add(const LoadShows())),
+              BlocProvider(create: (context) => getIt<ConnectivityBloc>()),
+            ],
+            child: const ConnectivityStatusWidget(child: ShowsScreen()),
           ),
         );
       case AppRoutes.show:
         final show = settings.arguments as Show;
         return MaterialPageRoute(builder: (_) => MovieScreen(show: show));
-      case AppRoutes.profile:
-        return MaterialPageRoute(builder: (_) => const Scaffold(body: Text('Profile')));
       default:
         return MaterialPageRoute(
           builder: (_) =>

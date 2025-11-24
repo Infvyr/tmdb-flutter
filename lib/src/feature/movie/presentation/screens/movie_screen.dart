@@ -28,24 +28,26 @@ class _MovieScreenState extends State<MovieScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        ShowDetailAppBar(widget.show, scrollController: _scrollController),
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              ShowDetailRating(widget.show),
-              ShowDetailSchedule(widget.show),
-              ShowDetailAirtime(widget.show),
-              ShowDetailLinks(widget.show),
-              ShowDetailSummary(widget.show),
-              ShowDetailGrid(widget.show),
-              const SizedBox(height: 32),
-            ],
+    body: Scrollbar(
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          ShowDetailAppBar(widget.show, scrollController: _scrollController),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                ShowDetailRating(widget.show),
+                ShowDetailSchedule(widget.show),
+                ShowDetailAirtime(widget.show),
+                ShowDetailLinks(widget.show),
+                ShowDetailSummary(widget.show),
+                ShowDetailGrid(widget.show),
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

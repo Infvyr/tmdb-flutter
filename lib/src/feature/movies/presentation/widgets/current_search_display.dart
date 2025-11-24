@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tmdbmaze/src/app/export.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
 
 class CurrentSearchDisplay extends StatelessWidget {
