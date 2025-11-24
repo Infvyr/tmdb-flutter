@@ -29,6 +29,7 @@ class _MovieScreenState extends State<MovieScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Scrollbar(
+      controller: _scrollController,
       child: CustomScrollView(
         controller: _scrollController,
         slivers: [

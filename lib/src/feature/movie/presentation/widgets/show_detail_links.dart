@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tmdbmaze/src/feature/movies/export.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' show LaunchMode, canLaunchUrl, launchUrl;
 
 class ShowDetailLinks extends StatelessWidget {
   const ShowDetailLinks(this.show, {super.key});
